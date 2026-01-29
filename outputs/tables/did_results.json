@@ -1,0 +1,17 @@
+{
+  "did_estimate": 0.11576606787441535,
+  "infra_diff": 0.005860527676388491,
+  "reg_diff": -0.10990554019802685,
+  "se_did": 0.062227607325013624,
+  "t_stat": 1.8603650831337826,
+  "p_value": 0.06409928510760032,
+  "df": 232,
+  "infra_pre_mean": 0.0,
+  "infra_post_mean": 0.005860527676388491,
+  "reg_pre_mean": 0.0,
+  "reg_post_mean": -0.10990554019802685,
+  "bootstrap_ci_low": -0.007937738560171118,
+  "bootstrap_ci_high": 0.23912096068931377,
+  "bootstrap_pvalue": 0.0672,
+  "bootstrap_std": 0.06248696313828832
+}

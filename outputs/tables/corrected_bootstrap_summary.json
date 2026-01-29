@@ -1,0 +1,61 @@
+{
+  "analysis_date": "2026-01-29T06:43:39.898760",
+  "method": "event_equal_weighted_bootstrap",
+  "note": "Events averaged across assets FIRST, then bootstrapped. Each event weighted equally.",
+  "Infra_Negative": {
+    "statistic": -0.07942926551809346,
+    "ci_low": -0.24611780760745255,
+    "ci_high": 0.1037423547809631,
+    "se": 0.09025495096827979,
+    "p_value": 0.398,
+    "n_events": 8,
+    "n_observations": 31,
+    "method": "event_equal_weighted_bootstrap",
+    "event_level_cars": {
+      "7": -0.2025092800916529,
+      "18": 0.3412243947237372,
+      "24": -0.40512670857332944,
+      "25": -0.2591787951320696,
+      "27": 0.22667020199222787,
+      "28": -0.2813549086319778,
+      "29": 0.15438889146625628,
+      "43": -0.20954791989793917
+    }
+  },
+  "Reg_Negative": {
+    "statistic": -0.09408147365652468,
+    "ci_low": -0.29912719888592326,
+    "ci_high": 0.13394957594622586,
+    "se": 0.11152446125505058,
+    "p_value": 0.3932,
+    "n_events": 7,
+    "n_observations": 27,
+    "method": "event_equal_weighted_bootstrap",
+    "event_level_cars": {
+      "12": 0.366329252240763,
+      "15": -0.4961909051694554,
+      "19": -0.25397756276896744,
+      "22": -0.37265722189905387,
+      "31": -0.09530637906731243,
+      "32": -0.09001709473653102,
+      "36": 0.2832495958048844
+    }
+  },
+  "DiD_InfraVsReg": {
+    "statistic": 0.014652208138431225,
+    "ci_low": -0.2740718345679587,
+    "ci_high": 0.2925237059634714,
+    "se": 0.14574083029905768,
+    "p_value": 0.9344,
+    "n_events_a": 8,
+    "n_events_b": 7,
+    "mean_a": -0.07942926551809346,
+    "mean_b": -0.09408147365652468,
+    "method": "event_equal_weighted_diff_bootstrap"
+  },
+  "conclusion": {
+    "null_confirmed": true,
+    "original_method": "observation_weighted",
+    "corrected_method": "event_equal_weighted"
+  }
+}

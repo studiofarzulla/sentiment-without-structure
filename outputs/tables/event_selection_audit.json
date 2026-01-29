@@ -1,0 +1,232 @@
+{
+  "analysis_date": "2026-01-29T04:48:55.792644",
+  "full_sample": {
+    "infra_n": 10,
+    "infra_car": -0.07545894246733346,
+    "infra_ci": [
+      -0.2577613113010539,
+      0.11285687193612474
+    ],
+    "reg_n": 7,
+    "reg_car": -0.1111337227638316,
+    "reg_ci": [
+      -0.3005906828893902,
+      0.1128748397769551
+    ],
+    "diff": 0.035674780296498135,
+    "diff_ci": [
+      -0.2513913409826722,
+      0.3141079559529708
+    ],
+    "diff_pvalue": 0.8328
+  },
+  "exogenous_subsample": {
+    "infra_n": 9,
+    "infra_car": -0.13718980723638097,
+    "infra_ci": [
+      -0.29393080325419996,
+      0.04459987645207161
+    ],
+    "reg_n": 6,
+    "reg_car": -0.06565137508814078,
+    "reg_ci": [
+      -0.2855463742069028,
+      0.17039030552038667
+    ],
+    "diff": -0.07153843214824018,
+    "diff_ci": [
+      -0.3633359429790438,
+      0.21361656702866624
+    ],
+    "diff_pvalue": 0.614
+  },
+  "selection_breakdown": {
+    "both": {
+      "Infra_Negative": 5,
+      "Reg_Negative": 2,
+      "All": 7
+    },
+    "exogenous": {
+      "Infra_Negative": 4,
+      "Reg_Negative": 4,
+      "All": 8
+    },
+    "return_threshold": {
+      "Infra_Negative": 1,
+      "Reg_Negative": 1,
+      "All": 2
+    },
+    "All": {
+      "Infra_Negative": 10,
+      "Reg_Negative": 7,
+      "All": 17
+    }
+  },
+  "exogenous_events": [
+    {
+      "event_id": 1,
+      "label": "QuadrigaCX",
+      "date": "2019-02-15",
+      "type_detailed": "Infra_Negative",
+      "is_known_major_event": true,
+      "meets_auto_threshold": false,
+      "selection_criterion": "exogenous",
+      "same_day_return": -0.005650994884299432,
+      "three_day_return": -0.002446794819149223
+    },
+    {
+      "event_id": 3,
+      "label": "Binance hack '19",
+      "date": "2019-05-07",
+      "type_detailed": "Infra_Negative",
+      "is_known_major_event": true,
+      "meets_auto_threshold": false,
+      "selection_criterion": "exogenous",
+      "same_day_return": -0.005838363914779876,
+      "three_day_return": 0.015954918233197946
+    },
+    {
+      "event_id": 7,
+      "label": "Black Thursday",
+      "date": "2020-03-12",
+      "type_detailed": "Infra_Negative",
+      "is_known_major_event": true,
+      "meets_auto_threshold": true,
+      "selection_criterion": "both",
+      "same_day_return": 0.003641265870239385,
+      "three_day_return": -0.349542799009506
+    },
+    {
+      "event_id": 12,
+      "label": "SEC v Ripple",
+      "date": "2020-12-22",
+      "type_detailed": "Reg_Negative",
+      "is_known_major_event": true,
+      "meets_auto_threshold": false,
+      "selection_criterion": "exogenous",
+      "same_day_return": -0.028799963553819197,
+      "three_day_return": 0.011755724926311606
+    },
+    {
+      "event_id": 15,
+      "label": "China mining ban",
+      "date": "2021-05-19",
+      "type_detailed": "Reg_Negative",
+      "is_known_major_event": true,
+      "meets_auto_threshold": true,
+      "selection_criterion": "both",
+      "same_day_return": -0.015755393847344368,
+      "three_day_return": -0.14831685119524318
+    },
+    {
+      "event_id": 19,
+      "label": "China crypto ban",
+      "date": "2021-09-24",
+      "type_detailed": "Reg_Negative",
+      "is_known_major_event": true,
+      "meets_auto_threshold": false,
+      "selection_criterion": "exogenous",
+      "same_day_return": 0.031974396776981884,
+      "three_day_return": -0.01915824954272538
+    },
+    {
+      "event_id": 24,
+      "label": "Terra/UST crash",
+      "date": "2022-05-09",
+      "type_detailed": "Infra_Negative",
+      "is_known_major_event": true,
+      "meets_auto_threshold": true,
+      "selection_criterion": "both",
+      "same_day_return": -0.04225072091560644,
+      "three_day_return": -0.1490927668119879
+    },
+    {
+      "event_id": 25,
+      "label": "Celsius freeze",
+      "date": "2022-06-12",
+      "type_detailed": "Infra_Negative",
+      "is_known_major_event": true,
+      "meets_auto_threshold": true,
+      "selection_criterion": "both",
+      "same_day_return": -0.024986969853889707,
+      "three_day_return": -0.08020360691818185
+    },
+    {
+      "event_id": 27,
+      "label": "BNB bridge hack",
+      "date": "2022-10-06",
+      "type_detailed": "Infra_Negative",
+      "is_known_major_event": true,
+      "meets_auto_threshold": false,
+      "selection_criterion": "exogenous",
+      "same_day_return": -0.009022576035567997,
+      "three_day_return": -0.01948093954986596
+    },
+    {
+      "event_id": 28,
+      "label": "FTX bankrupt",
+      "date": "2022-11-11",
+      "type_detailed": "Infra_Negative",
+      "is_known_major_event": true,
+      "meets_auto_threshold": true,
+      "selection_criterion": "both",
+      "same_day_return": 0.1176741759273725,
+      "three_day_return": 0.08497860281758451
+    },
+    {
+      "event_id": 29,
+      "label": "USDC depeg (SVB)",
+      "date": "2023-03-10",
+      "type_detailed": "Infra_Negative",
+      "is_known_major_event": true,
+      "meets_auto_threshold": true,
+      "selection_criterion": "both",
+      "same_day_return": -0.0615462006251255,
+      "three_day_return": -0.06988654817357576
+    },
+    {
+      "event_id": 31,
+      "label": "SEC v Binance",
+      "date": "2023-06-05",
+      "type_detailed": "Reg_Negative",
+      "is_known_major_event": true,
+      "meets_auto_threshold": false,
+      "selection_criterion": "exogenous",
+      "same_day_return": 0.00920242525081072,
+      "three_day_return": -0.04706043609733446
+    },
+    {
+      "event_id": 32,
+      "label": "SEC v Coinbase",
+      "date": "2023-06-06",
+      "type_detailed": "Reg_Negative",
+      "is_known_major_event": true,
+      "meets_auto_threshold": true,
+      "selection_criterion": "both",
+      "same_day_return": -0.05574982772575332,
+      "three_day_return": -0.003618173287236348
+    },
+    {
+      "event_id": 36,
+      "label": "Binance/CZ $4.3B",
+      "date": "2023-11-21",
+      "type_detailed": "Reg_Negative",
+      "is_known_major_event": true,
+      "meets_auto_threshold": false,
+      "selection_criterion": "exogenous",
+      "same_day_return": 0.0020127191358709773,
+      "three_day_return": -0.03871904784308822
+    },
+    {
+      "event_id": 43,
+      "label": "Bybit hack '25",
+      "date": "2025-02-21",
+      "type_detailed": "Infra_Negative",
+      "is_known_major_event": true,
+      "meets_auto_threshold": false,
+      "selection_criterion": "exogenous",
+      "same_day_return": 0.018947214057701167,
+      "three_day_return": -0.004346918417968415
+    }
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "analysis_date": "2026-01-29T07:17:13.321135",
+  "black_thursday_event": {
+    "event_id": 7,
+    "date": "2020-03-12",
+    "car": -0.2025092800916529
+  },
+  "with_black_thursday": {
+    "mean_a": -0.07942926551809346,
+    "mean_b": -0.09408147365652468,
+    "difference": 0.014652208138431225,
+    "ci_low": -0.2678498294141403,
+    "ci_high": 0.303673132477246,
+    "p_value": 0.9164,
+    "n_a": 8,
+    "n_b": 7
+  },
+  "excluding_black_thursday": {
+    "mean_a": -0.06184640629329923,
+    "mean_b": -0.09408147365652468,
+    "difference": 0.03223506736322545,
+    "ci_low": -0.2614708625002989,
+    "ci_high": 0.3288219127211862,
+    "p_value": 0.8116,
+    "n_a": 7,
+    "n_b": 7
+  },
+  "robust_to_exclusion": true
+}

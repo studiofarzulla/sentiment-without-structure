@@ -1,0 +1,21 @@
+{
+  "baseline": -0.07545894246733346,
+  "excluded": {
+    "FTX bankrupt": {
+      "event_id": 28,
+      "event_date": "2022-11-11",
+      "loo_mean": -0.04495583636886762,
+      "change_from_baseline": 0.03050310609846584,
+      "sign_flip": "False",
+      "magnitude_change_pct": 40.423447640643495
+    },
+    "Terra/UST crash": {
+      "event_id": 24,
+      "event_date": "2022-05-09",
+      "loo_mean": -0.026619273414593313,
+      "change_from_baseline": 0.04883966905274015,
+      "sign_flip": "False",
+      "magnitude_change_pct": 64.7235005630818
+    }
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "analysis_date": "2026-01-29T05:46:06.355456",
+  "approach1_independent": {
+    "label": "Independent events [-5,+30]",
+    "n_group1": 6,
+    "n_group2": 2,
+    "mean_group1": -0.13299836565773537,
+    "mean_group2": -0.044703813047084734,
+    "difference": -0.08829455261065064,
+    "t_statistic": -0.2572493514781679,
+    "p_value": 0.8340890271623047,
+    "ci_low": -3.0683497982275196,
+    "ci_high": 2.8917606930062187,
+    "significant_05": false,
+    "ci_crosses_zero": true
+  },
+  "approach2_short_window": {
+    "label": "All events [0,+5]",
+    "n_group1": 9,
+    "n_group2": 7,
+    "mean_group1": -0.07883950113574081,
+    "mean_group2": -0.12763882442796107,
+    "difference": 0.048799323292220254,
+    "t_statistic": 0.7280048674689239,
+    "p_value": 0.47905667305711774,
+    "ci_low": -0.09547994073473257,
+    "ci_high": 0.19307858731917307,
+    "significant_05": false,
+    "ci_crosses_zero": true
+  },
+  "approach3_conservative": {
+    "label": "Independent events [0,+5]",
+    "n_group1": 6,
+    "n_group2": 2,
+    "mean_group1": -0.0986882691263764,
+    "mean_group2": -0.08765141522896046,
+    "difference": -0.011036853897415946,
+    "t_statistic": -0.08901576751205506,
+    "p_value": 0.9368894841743067,
+    "ci_low": -0.5244233047639169,
+    "ci_high": 0.502349596969085,
+    "significant_05": false,
+    "ci_crosses_zero": true
+  }
+}
