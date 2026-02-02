@@ -1,0 +1,9 @@
+event_id,date,label,title,mean_car,n_assets,has_overlaps,overlap_ids
+6,2019-10-24,China blockchain,China endorses blockchain as core technology,-0.15881269883458562,3,False,[]
+16,2021-06-09,SV BTC legal,El Salvador passes Bitcoin legal tender law,-0.5625538158033624,4,True,[15]
+20,2021-10-19,BITO ETF,First US Bitcoin futures ETF (BITO) launches,-0.27449770880149643,4,True,"[19, 21]"
+23,2022-03-09,US crypto EO,US Executive Order on Digital Assets,0.038918343772948935,4,False,[]
+33,2023-06-15,BlackRock BTC ETF,BlackRock files for US spot Bitcoin ETF,0.18155556289461935,4,True,"[31, 32]"
+34,2023-08-29,Grayscale win,Grayscale wins court case vs SEC (spot BTC ETF),-0.11886152959568345,4,False,[]
+37,2024-01-10,US spot BTC ETFs,SEC approves 11 US spot Bitcoin ETFs,-0.053294442138839174,4,False,[]
+44,2025-02-27,SEC drops Coinbase,SEC and Coinbase file joint stipulation to dismiss case,-0.19838627211880083,4,True,"[43, 45]"

@@ -1,0 +1,33 @@
+event_id,label,date,type_detailed,is_known_major_event,meets_auto_threshold,selection_criterion,same_day_return,three_day_return
+1,QuadrigaCX,2019-02-15,Infra_Negative,True,False,exogenous,-0.005650994884299432,-0.002446794819149223
+2,SEC FinHub,2019-04-03,Regulatory,False,True,return_threshold,0.17266109881059233,0.1952356595618725
+3,Binance hack '19,2019-05-07,Infra_Negative,True,False,exogenous,-0.005838363914779876,0.015954918233197946
+5,LTC halving '19,2019-08-05,Infra_Positive,False,True,return_threshold,0.014863342714911854,0.09520025188136949
+6,China blockchain,2019-10-24,Reg_Positive,False,True,return_threshold,-0.0716893250485211,-0.07599211195671485
+7,Black Thursday,2020-03-12,Infra_Negative,True,True,both,0.003641265870239385,-0.349542799009506
+8,BTC halving '20,2020-05-11,Infra_Positive,False,True,return_threshold,-0.08510285998391842,-0.10055900512376204
+11,ETH2 Beacon,2020-12-01,Infra_Positive,False,True,return_threshold,0.0792278953029868,0.03783516201516779
+12,SEC v Ripple,2020-12-22,Reg_Negative,True,False,exogenous,-0.028799963553819197,0.011755724926311606
+15,China mining ban,2021-05-19,Reg_Negative,True,True,both,-0.015755393847344368,-0.14831685119524318
+16,SV BTC legal,2021-06-09,Reg_Positive,False,True,return_threshold,0.003161820683443173,0.12263350371624049
+17,ETH EIP-1559,2021-08-05,Infra_Positive,False,True,return_threshold,0.03605133967143326,0.06403787683213147
+18,Poly hack $611m,2021-08-10,Infra_Negative,False,True,return_threshold,0.058459335355862896,0.043112169765030295
+19,China crypto ban,2021-09-24,Reg_Negative,True,False,exogenous,0.031974396776981884,-0.01915824954272538
+20,BITO ETF,2021-10-19,Reg_Positive,True,False,exogenous,0.007050530590506421,0.0476403752044503
+22,Kazakh net off,2022-01-05,Reg_Negative,False,True,return_threshold,-0.012746659072568889,-0.061979854762357456
+23,US crypto EO,2022-03-09,Reg_Positive,False,True,return_threshold,0.017240116528726368,0.10267596175684801
+24,Terra/UST crash,2022-05-09,Infra_Negative,True,True,both,-0.04225072091560644,-0.1490927668119879
+25,Celsius freeze,2022-06-12,Infra_Negative,True,True,both,-0.024986969853889707,-0.08020360691818185
+26,ETH Merge,2022-09-15,Infra_Positive,True,False,exogenous,0.0035152638446938056,-0.0239186712725028
+27,BNB bridge hack,2022-10-06,Infra_Negative,True,False,exogenous,-0.009022576035567997,-0.01948093954986596
+28,FTX bankrupt,2022-11-11,Infra_Negative,True,True,both,0.1176741759273725,0.08497860281758451
+29,USDC depeg (SVB),2023-03-10,Infra_Negative,True,True,both,-0.0615462006251255,-0.06988654817357576
+31,SEC v Binance,2023-06-05,Reg_Negative,True,False,exogenous,0.00920242525081072,-0.04706043609733446
+32,SEC v Coinbase,2023-06-06,Reg_Negative,True,True,both,-0.05574982772575332,-0.003618173287236348
+33,BlackRock BTC ETF,2023-06-15,Reg_Positive,True,False,exogenous,-0.02954721948945438,-0.01188947013073094
+34,Grayscale win,2023-08-29,Reg_Positive,False,True,return_threshold,0.0010180168549442925,0.06317541788411019
+36,Binance/CZ $4.3B,2023-11-21,Reg_Negative,True,False,exogenous,0.0020127191358709773,-0.03871904784308822
+37,US spot BTC ETFs,2024-01-10,Reg_Positive,True,False,exogenous,-0.017688686735049752,-0.006474160810775564
+39,BTC halving '24,2024-04-20,Infra_Positive,True,False,exogenous,0.00830779301760498,0.022577844884360987
+43,Bybit hack '25,2025-02-21,Infra_Negative,True,False,exogenous,0.018947214057701167,-0.004346918417968415
+44,SEC drops Coinbase,2025-02-27,Reg_Positive,False,True,return_threshold,-0.05470804215649505,-0.04559280582553282

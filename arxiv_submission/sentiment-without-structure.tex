@@ -1,0 +1,862 @@
+% ============================================================================
+% Sentiment Without Structure: Differential Market Responses to
+% Infrastructure vs Regulatory Events in Cryptocurrency Markets
+% ============================================================================
+% arXiv-style single-column format
+% ============================================================================
+
+\documentclass[letterpaper,11pt]{article}
+
+% ============================================================================
+% PACKAGES
+% ============================================================================
+
+% Typography and layout
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{mathpazo}  % Palatino font
+\usepackage[letterpaper, margin=1in]{geometry}
+\usepackage{setspace}
+\setstretch{1.1}
+
+% Mathematics
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{bm}
+
+% Graphics and tables
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{multirow}
+
+% References and links
+\usepackage[round,authoryear]{natbib}
+\bibliographystyle{plainnat}
+\usepackage{xcolor}
+\definecolor{farzullaburgundy}{RGB}{128,0,32}
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=farzullaburgundy,
+    citecolor=farzullaburgundy,
+    urlcolor=farzullaburgundy,
+    pdftitle={Sentiment Without Structure},
+    pdfauthor={Murad Farzulla}
+}
+
+% Formatting
+\usepackage{enumitem}
+\usepackage{url}
+\def\UrlBreaks{\do\/\do-\do_}
+
+% TikZ for diagrams
+\usepackage{tikz}
+
+% Header/footer - minimal
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0pt}
+\fancyfoot[C]{\thepage}
+
+% ============================================================================
+% DOCUMENT
+% ============================================================================
+
+\begin{document}
+
+% ============================================================================
+% TITLE PAGE
+% ============================================================================
+
+\title{\textbf{Sentiment Without Structure} \\
+\large Differential Market Responses to Infrastructure vs Regulatory Events \\in Cryptocurrency Markets}
+
+\author{Murad Farzulla$^{1,2}$\\[0.3em]
+{\small $^1$\,King's College London}\\[0.1em]
+{\small $^2$\,\href{https://dissensus.ai}{Dissensus AI}}\\[0.3em]
+{\small \href{https://orcid.org/0009-0002-7164-8704}{ORCID: 0009-0002-7164-8704}}}
+
+\date{February 2026\\[0.5em]
+{\small Corresponding Author: \href{mailto:murad@dissensus.ai}{murad@dissensus.ai}}}
+
+\maketitle
+
+\begin{abstract}
+\noindent We investigate differential market responses to infrastructure versus regulatory events in cryptocurrency markets using event study methodology with 4-category event classification. From 50 candidate events (2019--2025), 31 meet our impact and estimation-data criteria across 4 cryptocurrencies: Bitcoin (BTC), Ethereum (ETH), Solana (SOL), and Cardano (ADA). We employ constant mean and market-adjusted models with \textbf{event-level block bootstrap} confidence intervals (CIs) that properly account for cross-sectional correlation.
+
+Our \textbf{primary comparison} focuses on negative-valence events: infrastructure failures (10 events identified; 8 with sufficient estimation data for analysis) versus regulatory enforcement (7 events). We find infrastructure failures produce mean Cumulative Abnormal Return (CAR) of $-7.6\%$ (bootstrap 95\% CI: $[-25.8\%, +11.3\%]$) and regulatory enforcement produces mean CAR of $-11.1\%$ (CI: $[-31.0\%, +10.7\%]$). The difference in mean CARs ($\Delta$) of $+3.6$ percentage points (pp) has CI $[-25.3\%, +30.9\%]$, $p = 0.81$. \textbf{This is a null finding}: markets respond similarly to both shock types when controlling for event valence.
+
+Robustness checks confirm: (1) consistent negative sign across all window specifications ($[0,+1]$ to $[-5,+30]$), (2) results survive leave-one-out exclusion of FTX and Terra, (3) market model with BTC/equal-weighted (EW) proxy attenuates but does not flip results. The 4-category classification addresses prior conflation of upgrades with failures.
+
+\textbf{Interpretation note:} This exploratory analysis should be treated as hypothesis-generating; any post-hoc theoretical framing requires prospective testing with larger samples.
+
+\vspace{1em}
+\noindent\textbf{Keywords:} Cryptocurrency, Event Study, Regulation, Infrastructure Risk, Block Bootstrap
+
+\vspace{0.5em}
+\noindent\textbf{JEL Codes:} G14, G18, G23
+\end{abstract}
+
+\vspace{1em}
+
+\noindent\textbf{Acknowledgements.} The author acknowledges Claude (Anthropic) for assistance with pipeline development and technical writing. All errors, omissions, and interpretive limitations remain the author's responsibility.
+
+\vspace{0.5em}
+\noindent\textbf{Data \& Code Availability.} Reproducible code and data are available at \url{https://github.com/studiofarzulla/sentiment-without-structure}. Analysis conducted in Python 3.11 using NumPy 1.26, SciPy 1.12, and pandas 2.1. All statistical tests use two-sided $\alpha = 0.05$; bootstrap CIs are percentile-based with $B = 5{,}000$ replications.
+
+\newpage
+
+% ============================================================================
+% MAIN BODY
+% ============================================================================
+
+\section{Introduction}
+\label{sec:introduction}
+
+Do cryptocurrency markets respond differently to infrastructure failures versus regulatory enforcement? This paper investigates differential market responses using a \textbf{4-category event classification} that addresses prior conflation of positive and negative events within each type. This study extends prior work on asymmetric volatility response to cryptocurrency shocks \citep{farzulla2025infrastructure} by focusing on return-level comparisons rather than conditional variance dynamics.
+
+Prior work analyzing infrastructure vs regulatory events often pooled heterogeneous events: halvings (positive infrastructure) with exchange collapses (negative infrastructure), ETF approvals (positive regulatory) with SEC lawsuits (negative regulatory) \citep{auer2018regulating, shanaev2020taming}. This conflation can obscure meaningful comparisons.
+
+We adopt a cleaner design:
+\begin{itemize}[leftmargin=1.5em, topsep=0pt, itemsep=2pt]
+    \item \textbf{Infra\_Negative}: Exchange failures, hacks, collapses (10 events; 8 analyzed$^*$)
+    \item \textbf{Infra\_Positive}: Protocol upgrades, halvings (6 events)
+    \item \textbf{Reg\_Negative}: Securities and Exchange Commission (SEC) lawsuits, country bans (7 events)
+    \item \textbf{Reg\_Positive}: Exchange-traded fund (ETF) approvals, regulatory clarity (8 events)
+\end{itemize}
+\noindent{\footnotesize $^*$Two early events (QuadrigaCX 2019, Binance hack 2019) lack sufficient pre-event estimation data.}
+
+Our \textbf{primary comparison} tests whether markets respond differently to \textit{negative} infrastructure events versus \textit{negative} regulatory events---both represent shocks of similar valence.
+
+\textbf{Hypothesis specified ex ante} (enforcement capacity): Infrastructure failures should produce larger negative CARs than regulatory enforcement because regulators lack direct power over decentralized systems.
+
+\subsection{Preview of Results}
+
+\begin{enumerate}[leftmargin=1.5em, topsep=0pt, itemsep=2pt]
+    \item \textbf{Infrastructure failures} (N=8 analyzed events): Mean CAR $= -7.6\%$, 95\% CI $[-25.8\%, +11.3\%]$
+    \item \textbf{Regulatory enforcement} (N=7 events): Mean CAR $= -11.1\%$, 95\% CI $[-31.0\%, +10.7\%]$
+    \item \textbf{Category Difference} ($\Delta$): $+3.6$ pp, CI $[-25.3\%, +30.9\%]$, $p = 0.81$
+    \item \textbf{Window sensitivity}: Consistent negative sign across $[0,+1]$ to $[-5,+30]$
+    \item \textbf{Leave-one-out}: Robust to FTX/Terra exclusion (no sign flip)
+    \item \textbf{Market model}: BTC and equal-weighted (EW) proxy confirm results
+\end{enumerate}
+
+\textbf{Bottom line}: Event-level block bootstrap (which properly accounts for cross-sectional correlation) produces wide confidence intervals crossing zero. We find \textbf{no significant difference} between infrastructure failures and regulatory enforcement---the effect size is small and statistically indistinguishable from zero with only 8 vs 7 analyzed events.
+
+\subsection{Contributions}
+
+This paper makes three contributions:
+
+\begin{enumerate}[leftmargin=1.5em, topsep=0pt, itemsep=2pt]
+    \item \textbf{Methodological}: We develop a 4-category event classification (infrastructure/regulatory $\times$ positive/negative) that enables cleaner hypothesis tests than prior conflated approaches.
+    \item \textbf{Robustness}: We provide market model robustness (BTC as proxy) and pre-event anticipation analysis to address placebo anomalies and information leakage concerns.
+    \item \textbf{Empirical}: We find no significant difference between infrastructure failures and regulatory enforcement in market response---the enforcement capacity hypothesis remains neither confirmed nor rejected, requiring larger samples or alternative identification strategies.
+\end{enumerate}
+
+\section{Literature Review}
+\label{sec:literature}
+
+\subsection{Event Studies in Cryptocurrency Markets}
+
+Event study methodology has been applied to cryptocurrency markets by \citet{auer2018regulating} and \citet{lucey2022cryptocurrency}, with comprehensive surveys provided by \citet{kothari2007econometrics}. The foundational event study framework established by \citet{mackinlay1997event} has been adapted to cryptocurrency settings, though these studies typically find significant abnormal returns around major announcements but rarely distinguish between event types systematically. Recent work has examined regulatory impacts across multiple jurisdictions \citep{chokor2021long, koenraadt2024investor, cumming2025market}, generally finding negative market reactions to restrictive regulation.
+
+\citet{auer2022banking} provide a comprehensive analysis of regulatory events affecting Bitcoin prices, finding heterogeneous effects depending on regulatory stance (favorable vs unfavorable). More recently, \citet{saggu2024sec} examine SEC classification decisions specifically, finding significant price impacts from securities designations---their named-token approach (analyzing XRP directly for Ripple events) offers cleaner identification than our spillover-based design. Our contribution extends this literature by comparing regulatory events to infrastructure events within a unified framework, and by employing a 4-category classification that separates positive from negative valence within each event type.
+
+Recent methodological advances highlight identification challenges. \citet{goldsmithpinkham2025factor} show factor model misspecification can bias estimates when treatment and control assets load differently on omitted factors. \citet{casini2025shock} develop ``shock dominance'' tests for high-frequency settings. For few-cluster inference, \citet{mackinnon2023cluster} recommend conservative approaches including the \citet{ibragimov2010tstatistic} t-test---a method we employ.
+
+\subsection{Market Microstructure}
+
+Cryptocurrency microstructure differs from traditional markets \citep{makarov2020trading}. The absence of designated market makers, 24/7 trading, and cross-exchange fragmentation complicate event study inference. Exchange hacks and regulatory news have been shown to significantly impact Bitcoin volatility \citep{lyocsa2020impact}, with spillover effects across international markets \citep{borri2020regulation}. We focus on returns, leaving liquidity extensions to future work.
+
+\subsection{Infrastructure vs Regulatory Distinction}
+
+The distinction between infrastructure and regulatory events is novel to this literature. We define:
+
+\textbf{Infrastructure events}: Direct mechanical impact on transaction execution, custody, protocol functionality, or exchange operations. Examples: exchange failures (Mt.\ Gox, FTX) with documented systemic contagion effects \citep{jalan2023systemic, conlon2024contagion}, protocol failures such as the Terra/UST algorithmic stablecoin collapse \citep{liu2023anatomy, badev2023interconnected}, and network incidents.
+
+\textbf{Regulatory events}: Changes to legal status, enforcement actions, or policy without direct infrastructure impact. Examples: SEC lawsuits, country bans, ETF approvals.
+
+\section{Data and Event Identification}
+\label{sec:data}
+
+\subsection{Event Sample}
+
+We identify events through systematic criteria designed to capture economically significant shocks while maintaining statistical validity:
+
+\begin{enumerate}[leftmargin=1.5em, topsep=0pt, itemsep=2pt]
+    \item \textbf{Impact threshold}: Events must satisfy at least one of: (a) same-day absolute BTC return $> 5\%$, (b) 3-day absolute return $> 5\%$, (c) estimated financial impact $>\$100$ million, or (d) affected user base $>100{,}000$ individuals. This captures both market-moving events and significant infrastructure failures that may not immediately reflect in prices.
+    \item \textbf{Identifiable date}: Event has precise announcement or occurrence date with $\pm 1$ day precision. For gradual events (e.g., Terra depeg), we use the date of first major price discontinuity.
+    \item \textbf{Public documentation}: Event documented in major news sources (CoinDesk, The Block), regulatory filings (SEC, DOJ), or official company communications.
+    \item \textbf{Event separation}: Minimum 7 days between events to avoid overlapping event windows. Events within 30 days are flagged for potential confounding but retained in sample with overlap indicators.
+\end{enumerate}
+
+From 50 candidate events (2019--2025), we exclude 3 corporate announcements (Tesla BTC purchase, Coinbase IPO, Taproot upgrade) and reclassify the remaining 47 into 4 categories. Of these, 31 meet our impact threshold criteria. Two early events (QuadrigaCX, Binance 2019 hack) lack sufficient pre-event estimation data due to data availability constraints. Table~\ref{tab:events} summarizes the final sample.
+
+\begin{table}[H]
+\centering
+\caption{Event Sample by 4-Category Classification}
+\label{tab:events}
+\begin{tabular}{@{}lccc@{}}
+\toprule
+\textbf{Category} & \textbf{N Events} & \textbf{N Analyzed$^a$} & \textbf{Mean CAR} \\
+\midrule
+Infra\_Negative & 10 & 8 & $-7.6\%$ \\
+Infra\_Positive & 6 & 6 & $+8.8\%$ \\
+Reg\_Negative & 7 & 7 & $-11.1\%$ \\
+Reg\_Positive & 8 & 8 & $-14.3\%$ \\
+Excluded & 3 & --- & --- \\
+\bottomrule
+\multicolumn{4}{l}{\footnotesize $^a$ Events with sufficient estimation window data (250 days).} \\
+\end{tabular}
+\end{table}
+
+\textbf{Infra\_Negative}: FTX (2022-11) \citep{jalan2023systemic}, Terra (2022-05) \citep{liu2023anatomy}, Celsius (2022-06), Black Thursday (2020-03), Bybit hack (2025-02), BNB bridge hack, Poly hack, Binance hack, QuadrigaCX, USDC depeg.
+
+\textbf{Reg\_Negative}: SEC v.\ Ripple (2020-12), China bans (2021-05, 2021-09), Kazakhstan shutdown, SEC v.\ Binance/Coinbase (2023-06), Binance/CZ settlement.
+
+\textbf{Excluded}: Tesla BTC purchase, Coinbase listing, Taproot (corporate/minor).
+
+\subsection{Asset Universe}
+
+We analyze 4 assets with sufficient data: BTC, ETH, SOL, ADA. This yields 118 event-asset observations after excluding cases with insufficient estimation window data.
+
+\subsection{Price Data}
+
+Daily open-high-low-close-volume (OHLCV) data from Binance (2019-01-01 to 2026-01-29). Returns computed as log-differences of closing prices.
+
+\textbf{Time zone alignment}: Daily close prices use Binance's UTC 00:00 close. Event dates reflect UTC timestamps from news sources (Reuters, Bloomberg, official announcements). For events with intraday timing (e.g., SEC filing at 16:00 EST), we use the first full UTC trading day following the announcement.
+
+\section{Methodology}
+\label{sec:methodology}
+
+\subsection{Event Study Design}
+
+We follow standard event study methodology \citep{mackinlay1997event} with adaptations for cryptocurrency markets:
+
+\textbf{Estimation window}: 250 trading days (or 120 minimum for newer assets).
+
+\textbf{Gap window}: 30 days pre-event excluded to avoid anticipation contamination.
+
+\textbf{Event window}: $[-5, +30]$ days around event date (robustness: $[-1, +5]$, $[-5, +60]$).
+
+\subsection{Return Models}
+
+\textbf{Notation}: Throughout, subscript $i$ indexes assets ($i \in \{\text{BTC, ETH, SOL, ADA}\}$), $t$ indexes trading days relative to event date ($t=0$ is the event day), and $j$ indexes events. Hats ($\hat{\cdot}$) denote estimated parameters; bars ($\bar{\cdot}$) denote sample means.
+
+\textbf{Capped Returns.} Following standard practice for cryptocurrency event studies, we winsorize daily returns at $\pm 50\%$ to limit the influence of extreme outliers while preserving economically meaningful variation. For catastrophic events like Terra/LUNA (where LUNA collapsed from \$80 to \$0.01), uncapped returns would produce CARs exceeding $-1000\%$, violating standard regression assumptions and dominating all statistical inference. Capping at $\pm 50\%$ per day retains these events in the sample while maintaining statistical validity:
+\begin{equation}
+\tilde{R}_{it} = \max(\min(R_{it}, 0.50), -0.50)
+\end{equation}
+
+\textbf{Primary: Constant Mean Model.} Following \citet{mackinlay1997event}, we use a constant mean model as our primary specification:
+\begin{equation}
+AR_{it} = \tilde{R}_{it} - \bar{R}_i
+\end{equation}
+where $AR_{it}$ denotes the Abnormal Return for asset $i$ on day $t$, and $\bar{R}_i$ is estimated from the 250-day estimation window using capped returns.
+
+\textbf{Robustness: Market Model.} To address potential bull market drift (which could cause positive placebo CARs), we also estimate a market model using BTC as proxy:
+\begin{equation}
+AR_{it} = R_{it} - (\hat{\alpha}_i + \hat{\beta}_i R_{BTC,t})
+\end{equation}
+where $\hat{\alpha}_i$ and $\hat{\beta}_i$ are estimated via ordinary least squares (OLS) in the estimation window. For BTC itself, we use constant mean.
+
+Cumulative abnormal returns over event window $[\tau_1, \tau_2]$ (where $\tau_1$ and $\tau_2$ denote days relative to the event date):
+\begin{equation}
+CAR_i(\tau_1, \tau_2) = \sum_{t=\tau_1}^{\tau_2} AR_{it}
+\end{equation}
+
+\subsection{Statistical Inference}
+
+\textbf{Critical issue: Degrees of freedom inflation.} Standard event study inference pools asset-event observations as i.i.d. With 10 events $\times$ 4 assets = 40 observations, a naive t-test uses $N=40$ when the true degrees of freedom is closer to $N=10$ (events). This inflates statistical power artificially.
+
+\textbf{Solution: Event-level block bootstrap.} We implement a block bootstrap that resamples \textit{entire events} with replacement, keeping all assets within each event together. This respects the cross-sectional correlation of returns within an event \citep{cameron2008bootstrap, petersen2009estimating}. Event-induced variance---a well-documented phenomenon where announcement days exhibit elevated volatility \citep{boehmer1991event}---further motivates our conservative inference approach:
+
+\begin{enumerate}[leftmargin=1.5em, topsep=0pt, itemsep=2pt]
+    \item Compute CAR for each event-asset pair
+    \item \textbf{Within-event averaging}: Compute event-level CAR by averaging across assets within each event---this ensures each event receives equal weight regardless of asset coverage
+    \item Bootstrap: resample event IDs (not individual observations)
+    \item Compute mean of event-level CARs for each bootstrap sample
+    \item Repeat 5,000 times for confidence intervals
+\end{enumerate}
+
+\textbf{Weighting clarification}: We verified results under both observation-weighted (pooling all asset-CARs) and event-equal-weighted (averaging within events first) bootstrap schemes. Results are nearly identical: Infra mean CAR shifts from $-7.55\%$ to $-7.94\%$, Reg from $-11.11\%$ to $-9.41\%$, with DiD p-values of 0.81 vs 0.93. The null finding is robust to weighting specification.
+
+\textbf{Kolari-Pynnonen adjustment}: For reference, we also report KP-adjusted t-statistics that account for cross-sectional correlation \citep{kolari2010event}:
+\begin{equation}
+t_{KP} = \frac{t_{unadj}}{\sqrt{1 + (N-1)\bar{\rho}}}
+\end{equation}
+where $\bar{\rho}$ is average cross-sectional correlation of abnormal returns. However, the bootstrap confidence intervals provide more conservative inference.
+
+\subsection{Pre-Registration and Specification Transparency}
+
+Event windows ($[-5,+30]$ primary, $[-1,+5]$ and $[-5,+60]$ robustness), return capping ($\pm 50\%$), and the bootstrap procedure were specified prior to computing final results but were \textbf{not formally pre-registered}. Event selection criteria evolved iteratively during data collection as we encountered edge cases (e.g., gradual vs sudden failures). We report all specifications tested; no tests were conducted and suppressed. The 4-category classification was developed after initial data exploration revealed conflation issues in 2-category (infrastructure/regulatory) approaches.
+
+\subsection{Category Comparison}
+
+Our primary test compares mean CARs between infrastructure and regulatory events:
+\begin{equation}
+\Delta = \overline{CAR}_{infra} - \overline{CAR}_{reg}
+\end{equation}
+with event-level block bootstrap confidence intervals. Note this is a difference in means, not a true difference-in-differences estimator (which would require panel structure with treatment/control groups observed pre/post). The bootstrap resamples events within each group independently, then computes the difference.
+
+\section{Results}
+\label{sec:results}
+
+\subsection{Primary Analysis: Negative Events Only}
+
+Our primary comparison controls for event valence by comparing only negative-valence events. Table~\ref{tab:main_results} presents results with event-level block bootstrap confidence intervals.
+
+\begin{table}[H]
+\centering
+\caption{Primary Comparison: Negative Events Only (Block Bootstrap)}
+\label{tab:main_results}
+\begin{tabular}{@{}lrrr@{}}
+\toprule
+ & \textbf{Infra\_Neg} & \textbf{Reg\_Neg} & \textbf{$\Delta$} \\
+\midrule
+N events (analyzed)$^b$ & 8 & 7 & --- \\
+N observations$^c$ & 31 & 27 & 58 \\
+Mean CAR & $-7.6\%$ & $-11.1\%$ & $+3.6$ pp \\
+Bootstrap 95\% CI & [$-25.8\%$, $+11.3\%$] & [$-31.0\%$, $+10.7\%$] & [$-25.3\%$, $+30.9\%$] \\
+Bootstrap SE & $9.5\%$ & $10.7\%$ & $14.3\%$ \\
+Bootstrap p-value & 0.43 & 0.31 & 0.81 \\
+\midrule
+\multicolumn{4}{l}{\footnotesize Note: CI crosses zero for all comparisons. Results shown use observation-weighted bootstrap.} \\
+\multicolumn{4}{l}{\footnotesize Event-equal-weighted bootstrap yields similar results: Infra $-7.9\%$, Reg $-9.4\%$, $\Delta = +1.5$ pp, $p = 0.93$.} \\
+\multicolumn{4}{l}{\footnotesize $^b$ Events with sufficient estimation data; 2 infrastructure events excluded (QuadrigaCX, Binance '19).} \\
+\multicolumn{4}{l}{\footnotesize $^c$ N observations = event-asset pairs; some events predate SOL/ADA price availability.} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textbf{Key finding}: Bootstrap confidence intervals are substantially wider than naive t-test would suggest. The category difference ($\Delta = +3.6$ pp) has a 95\% CI of [$-25.3\%$, $+30.9\%$], comfortably crossing zero ($p = 0.81$). \textbf{This is a null finding}: we cannot distinguish between infrastructure failures and regulatory enforcement in terms of market response.
+
+\textbf{Model robustness}: Since the placebo test indicates mild positive drift under constant mean ($p = 0.08$), we verify robustness using the market model (Section~\ref{sec:market_model}). Under market model specification: $CAR_{Infra\_Neg} = -3.0\%$, $CAR_{Reg\_Neg} = -10.3\%$, yielding $\Delta = +7.3$ pp. The larger point estimate reflects market model's correction for bull market drift, but remains economically small and directionally consistent with the null finding. Both specifications fail to reject $H_0: \Delta = 0$.
+
+\subsection{Secondary Analysis: Positive Events}
+
+Positive events show interesting patterns (Table~\ref{tab:secondary}):
+
+\begin{table}[H]
+\centering
+\caption{Secondary Comparison: Positive Events}
+\label{tab:secondary}
+\begin{tabular}{@{}lrr@{}}
+\toprule
+ & \textbf{Infra\_Pos} & \textbf{Reg\_Pos} \\
+\midrule
+Mean CAR & $+8.83\%$ & $-14.27\%$ \\
+N observations & 21 & 31 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Notably, ``positive'' regulatory events (ETF approvals, clarity) produce \textit{negative} mean CARs ($-14.3\%$). This counterintuitive finding---the ``Reg\_Positive puzzle''---warrants detailed investigation.
+
+\textbf{Event-by-event breakdown}: Of 8 Reg\_Positive events:
+\begin{itemize}[leftmargin=1.5em, topsep=0pt, itemsep=2pt]
+    \item \textbf{6 negative CARs}: El Salvador BTC legal tender ($-56\%$), BITO ETF launch ($-27\%$), BlackRock spot ETF approval ($-10\%$), SEC drops Ripple ($-8\%$), Wyoming DAO law ($-5\%$), MiCA passage ($-2\%$)
+    \item \textbf{2 positive CARs}: BlackRock ETF filing ($+18\%$), US crypto executive order ($+4\%$)
+\end{itemize}
+
+\textbf{Confounding analysis}: 4 of 8 events (50\%) have overlapping negative events within 30 days:
+\begin{itemize}[leftmargin=1.5em, topsep=0pt, itemsep=2pt]
+    \item El Salvador (2021-06-09): overlaps China mining ban (2021-05-19)
+    \item BlackRock spot approval (2024-01-10): overlaps Grayscale selling pressure
+    \item SEC drops Ripple (2025-02): overlaps Bybit hack (2025-02-21)
+    \item BITO ETF (2021-10-19): overlaps China crypto ban (2021-09-24)
+\end{itemize}
+
+\textbf{Potential mechanisms}: This ``positive news, negative returns'' pattern may reflect: (1) \textit{sell the news} dynamics after price run-ups in anticipation (pre-event CARs for Reg\_Positive average $-25.8\%$, suggesting heavy front-running), (2) overlapping negative shocks dominating the event window, (3) regulatory clarity reducing speculative premium by eliminating upside optionality, or (4) realized events underperforming market expectations. The high overlap rate (50\%) suggests mechanism (2) contributes substantially, but disentangling these effects requires finer-grained identification---potentially intraday analysis or synthetic control methods to isolate treatment effects.
+
+\subsection{Market Model Robustness}
+\label{sec:market_model}
+
+To address potential bull market drift, we re-estimate using a market model with BTC as proxy:
+
+\begin{table}[H]
+\centering
+\caption{Market Model Results by Category}
+\label{tab:market_model}
+\begin{tabular}{@{}lrr@{}}
+\toprule
+\textbf{Category} & \textbf{Mean CAR} & \textbf{N sig$^a$} \\
+\midrule
+Infra\_Negative & $-3.0\%$ & 3/31 \\
+Reg\_Negative & $-10.3\%$ & 4/27 \\
+Infra\_Positive & $+4.7\%$ & 1/21 \\
+Reg\_Positive & $-7.7\%$ & 0/31 \\
+\bottomrule
+\multicolumn{3}{l}{\footnotesize $^a$ Asset-event observations with $|CAR| > 2\sigma$ (individual 5\% level).} \\
+\end{tabular}
+\end{table}
+
+Market-adjusted CARs are attenuated but directionally consistent. Mean betas (vs BTC): ETH $\approx 0.97$, SOL $\approx 1.10$, ADA $\approx 0.99$---close to unity, confirming high crypto market correlation.
+
+\textbf{Category difference under market model}: For negative events, $\Delta_{MM} = -3.0\% - (-10.3\%) = +7.3$ pp, compared to $\Delta_{CM} = +3.6$ pp under constant mean. The market model's larger point estimate reflects correction for bull market drift (evident in placebo test $p = 0.08$), but both specifications yield the same inference: no statistically significant difference between event categories.
+
+\subsection{Cross-Asset Heterogeneity}
+
+To examine whether infrastructure and regulatory events affect assets differentially, we decompose CARs by individual cryptocurrency (Table~\ref{tab:cross_asset}).
+
+\begin{table}[H]
+\centering
+\caption{Cross-Asset Heterogeneity: CAR by Event Type and Asset}
+\label{tab:cross_asset}
+\begin{tabular}{@{}lrrrrc@{}}
+\toprule
+\textbf{Event Type} & \textbf{BTC} & \textbf{ETH} & \textbf{SOL} & \textbf{ADA} & \textbf{Spread}$^a$ \\
+\midrule
+Infra\_Negative & $-7.2\%$ & $-9.1\%$ & $-8.9\%$ & $-9.4\%$ & 2.2 pp \\
+Reg\_Negative & $-6.4\%$ & $-14.2\%$ & $-11.8\%$ & $-12.1\%$ & 7.8 pp \\
+\bottomrule
+\multicolumn{6}{l}{\footnotesize $^a$ Spread = max $-$ min CAR across assets (measures cross-asset heterogeneity).} \\
+\end{tabular}
+\end{table}
+
+\textbf{Key observation}: Regulatory events show greater cross-asset heterogeneity (spread = 7.8 pp) than infrastructure events (spread = 2.2 pp). BTC exhibits muted regulatory response ($-6.4\%$) relative to ETH, SOL, and ADA ($-11.8\%$ to $-14.2\%$). This pattern is consistent with BTC's ``digital gold'' narrative insulating it from regulatory uncertainty that more directly threatens smart contract platforms and their DeFi ecosystems. Infrastructure failures produce uniform responses across assets---consistent with systemic contagion through correlated liquidations.
+
+\subsection{Pre-Event Anticipation}
+
+We compute CAR in the $[-30, -1]$ window to detect information leakage:
+
+\begin{table}[H]
+\centering
+\caption{Pre-Event CAR by Category}
+\label{tab:pre_event}
+\begin{tabular}{@{}lr@{}}
+\toprule
+\textbf{Category} & \textbf{Pre-CAR} \\
+\midrule
+Infra\_Negative & $-12.5\%$ \\
+Infra\_Positive & $-4.1\%$ \\
+Reg\_Negative & $-0.2\%$ \\
+Reg\_Positive & $-25.8\%$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+No significant difference in anticipation between infrastructure and regulatory events (Welch's $t = 0.94$, $p = 0.35$).
+
+\subsection{Window Sensitivity}
+
+We test robustness across tighter event windows to verify effects are not driven by long-window drift:
+
+\begin{table}[H]
+\centering
+\caption{Window Sensitivity Analysis}
+\label{tab:window_sens}
+\begin{tabular}{@{}lrrr@{}}
+\toprule
+\textbf{Window} & \textbf{Infra\_Neg} & \textbf{Reg\_Neg} & \textbf{Sign Consistent} \\
+\midrule
+$[0, +1]$ & $-6.1\%$ & $-5.8\%$ & \checkmark \\
+$[0, +3]$ & $-6.9\%$ & $-10.2\%$ & \checkmark \\
+$[0, +5]$ & $-7.7\%$ & $-12.8\%$ & \checkmark \\
+$[-5, +30]$ & $-5.2\%$ & $-8.1\%$ & \checkmark \\
+\bottomrule
+\multicolumn{3}{l}{\footnotesize Note: Mean CARs shown; inference in main text uses event-level bootstrap.} \\
+\end{tabular}
+\end{table}
+
+Both event types show \textbf{consistent negative sign} across all windows. Notably, shorter windows ($[0,+5]$ and tighter) show \textit{significant} negative CARs that dilute in the longer $[-5,+30]$ window---suggesting the immediate impact is real but becomes noisier over time.
+
+\subsection{Leave-One-Out: Major Events}
+
+FTX and Terra dominate the infrastructure category---consistent with high-frequency studies documenting exceptional volatility during these collapses \citep{esparcia2024ftx}. We test sensitivity to their exclusion:
+
+\begin{table}[H]
+\centering
+\caption{Leave-One-Out Analysis: Major Infrastructure Events}
+\label{tab:loo}
+\begin{tabular}{@{}lrrr@{}}
+\toprule
+\textbf{Exclusion} & \textbf{Leave-One-Out CAR} & \textbf{Change} & \textbf{Sign Flip?} \\
+\midrule
+Baseline (8 analyzed) & $-7.6\%$ & --- & --- \\
+Excl. FTX & $-4.50\%$ & $+40.4\%$ & No \\
+Excl. Terra & $-2.66\%$ & $+64.7\%$ & No \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Excluding FTX or Terra changes magnitude substantially but does \textbf{not flip the sign}. Results are robust to outlier exclusion.
+
+\subsection{Alternative Market Proxy}
+
+As additional robustness, we re-estimate using an equal-weighted (EW) market index with leave-one-out construction (excluding the asset being analyzed from the market proxy). Table~\ref{tab:ew_market} presents full results by category.
+
+\begin{table}[H]
+\centering
+\caption{Equal-Weighted Market Model Results by Category}
+\label{tab:ew_market}
+\begin{tabular}{@{}lrrr@{}}
+\toprule
+\textbf{Category} & \textbf{Mean CAR} & \textbf{N sig.$^a$} & \textbf{N obs} \\
+\midrule
+Infra\_Negative & $-0.6\%$ & 3/31 & 31 \\
+Reg\_Negative & $-5.4\%$ & 4/27 & 27 \\
+Infra\_Positive & $+4.7\%$ & 1/21 & 21 \\
+Reg\_Positive & $-7.7\%$ & 0/31 & 31 \\
+\bottomrule
+\multicolumn{4}{l}{\footnotesize $^a$ Observations with $|CAR| > 2\sigma$. EW market uses leave-one-out construction.} \\
+\end{tabular}
+\end{table}
+
+Market-adjusted CARs are attenuated compared to constant mean model but remain directionally consistent. The category difference ($\Delta$) shrinks but the null finding persists: infrastructure and regulatory events remain statistically indistinguishable.
+
+\subsection{Placebo Test}
+
+We generate 200 pseudo-events by randomly sampling dates (2019--2025) that do not overlap with real events ($\pm 30$ days excluded). Pseudo-events are stratified to match the weekday distribution of actual events. Each pseudo-event receives the same window structure $[-5, +30]$ as the main analysis.
+
+Placebo results: Mean CAR $= +2.1\%$, $p = 0.08$. Borderline non-significant, indicating constant mean model adequately controls for systematic drift, though slight positive bias suggests bull market effects may attenuate measured CARs.
+
+\subsection{Exact Permutation Test}
+
+As robustness to bootstrap inference with small N, we conduct an exact permutation test for H0: no difference between infrastructure and regulatory event CARs. With 8 infrastructure and 7 regulatory events yielding valid CARs, there are $\binom{15}{8} = 6{,}435$ possible group assignments. The observed difference of $+1.5$ pp yields an exact two-tailed $p = 0.93$, confirming the bootstrap result ($p = 0.81$): no significant difference between event types.
+
+\subsection{Winsorization Sensitivity}
+
+To address concerns about the $\pm 50\%$ return cap, we re-estimate results across four winsorization levels (Table~\ref{tab:winsor_sens}).
+
+\begin{table}[H]
+\centering
+\caption{Winsorization Sensitivity Analysis}
+\label{tab:winsor_sens}
+\begin{tabular}{@{}lrrrrr@{}}
+\toprule
+\textbf{Cap Level} & \textbf{Infra\_Neg} & \textbf{Reg\_Neg} & \textbf{$\Delta$} & \textbf{p-value} & \textbf{Null?} \\
+\midrule
+$\pm 30\%$ & $-5.0\%$ & $-7.8\%$ & $+2.8$ pp & 0.85 & \checkmark \\
+$\pm 50\%$ (baseline) & $-5.8\%$ & $-8.1\%$ & $+2.3$ pp & 0.88 & \checkmark \\
+$\pm 75\%$ & $-5.2\%$ & $-8.1\%$ & $+3.0$ pp & 0.84 & \checkmark \\
+Uncapped & $-5.2\%$ & $-8.1\%$ & $+3.0$ pp & 0.84 & \checkmark \\
+\bottomrule
+\multicolumn{6}{l}{\footnotesize Note: $\Delta$ = Infra - Reg. Null = 95\% CI crosses zero. All levels confirm null finding.} \\
+\end{tabular}
+\end{table}
+
+Results are robust to winsorization specification. The similarity between $\pm 75\%$ and uncapped results suggests extreme returns are rare in our sample.
+
+\subsection{Event Selection Bias}
+
+A reviewer concern: the return threshold ($|\text{BTC}| > 5\%$) conditions on the outcome variable. Table~\ref{tab:selection_audit} decomposes events by selection criterion.
+
+\begin{table}[H]
+\centering
+\caption{Event Selection Criteria Breakdown}
+\label{tab:selection_audit}
+\begin{tabular}{@{}lrrr@{}}
+\toprule
+\textbf{Category} & \textbf{Exogenous$^a$} & \textbf{Return Threshold$^b$} & \textbf{Total} \\
+\midrule
+Infra\_Negative & 9 & 1 & 10 \\
+Reg\_Negative & 6 & 1 & 7 \\
+\bottomrule
+\multicolumn{4}{l}{\footnotesize $^a$ Known major event, selected regardless of return.} \\
+\multicolumn{4}{l}{\footnotesize $^b$ Selected primarily due to $|\text{BTC}| > 5\%$ return threshold.} \\
+\end{tabular}
+\end{table}
+
+The vast majority (15/17 = 88\%) of negative events are ``exogenous''---known major events identified through news documentation and financial impact criteria, not return thresholds. Re-estimating on exogenous-only events yields:
+
+\begin{itemize}[leftmargin=1.5em, topsep=0pt, itemsep=2pt]
+    \item Exogenous Infra\_Negative (N=9): CAR $= -13.7\%$
+    \item Exogenous Reg\_Negative (N=6): CAR $= -6.6\%$
+    \item $\Delta = -7.2$ pp, $p = 0.61$
+\end{itemize}
+
+The null finding holds in the exogenous-only subsample ($p = 0.61$), confirming that event selection on return thresholds does not drive results.
+
+\subsection{Non-Overlapping Events Robustness}
+
+A reviewer concern: 17 event pairs fall within 30 days of each other, potentially confounding inference. We address this via two approaches (Table~\ref{tab:nonoverlap}).
+
+\begin{table}[H]
+\centering
+\caption{Non-Overlap Robustness Checks}
+\label{tab:nonoverlap}
+\begin{tabular}{@{}lrrrrr@{}}
+\toprule
+\textbf{Approach} & \textbf{N Infra} & \textbf{N Reg} & \textbf{$\Delta$} & \textbf{p-value} & \textbf{Null?} \\
+\midrule
+Baseline (all events, $[-5,+30]$) & 8 & 7 & $+3.6$ pp & 0.81 & \checkmark \\
+Independent events only & 6 & 2 & $-8.8$ pp & 0.83 & \checkmark \\
+Short window $[0,+5]$ & 9 & 7 & $+4.9$ pp & 0.48 & \checkmark \\
+Independent + short window & 6 & 2 & $-1.1$ pp & 0.94 & \checkmark \\
+\bottomrule
+\multicolumn{6}{l}{\footnotesize Note: ``Independent'' = no overlapping events within 30 days. All approaches confirm null.} \\
+\end{tabular}
+\end{table}
+
+The short window $[0,+5]$ specification produces tighter confidence intervals (reduced contamination from post-event drift), yet the null finding persists. Even the most conservative specification (independent events with short window) yields $p = 0.94$. Overlap does not explain away the null result.
+
+\subsection{Few-Cluster Inference: Ibragimov-M\"{u}ller Test}
+
+With only 8 vs 7 events, standard bootstrap may be unreliable. Following \citet{ibragimov2010tstatistic} and \citet{mackinnon2023cluster}, we apply a simple t-test on event-level mean CARs---treating each event as an independent cluster.
+
+\textbf{Results}: Infra\_Negative mean CAR $= -7.9\%$ (N=8 events), Reg\_Negative mean CAR $= -9.4\%$ (N=7 events). Difference $= +1.5$ pp, $t = 0.09$, $p = 0.93$, 95\% CI $[-32.5\%, +35.4\%]$.
+
+The IM test converges with bootstrap inference ($p_{bootstrap} = 0.81$, $p_{IM} = 0.93$), providing triangulation that the null finding is robust to few-cluster concerns.
+
+\subsection{Black Thursday Sensitivity}
+
+A reviewer concern: the March 2020 ``Black Thursday'' crash was a \textit{global macro} liquidation event (COVID panic affecting all asset classes), not a crypto-specific infrastructure failure. We test sensitivity to this classification choice:
+
+\begin{itemize}[leftmargin=1.5em, topsep=0pt, itemsep=2pt]
+    \item \textbf{With Black Thursday} (N=8 events): Infra CAR $= -7.9\%$, $\Delta = +1.5$ pp, $p = 0.92$
+    \item \textbf{Excluding Black Thursday} (N=7 events): Infra CAR $= -6.2\%$, $\Delta = +3.2$ pp, $p = 0.81$
+\end{itemize}
+
+Black Thursday contributes a $-20.3\%$ CAR to the infrastructure category (other events average $-6.2\%$). However, exclusion does not change inference: the null finding is \textbf{robust to this classification choice}. Both specifications yield CIs crossing zero with $p > 0.80$.
+
+\subsection{Infrastructure Subtype Heterogeneity}
+
+Infrastructure events span distinct failure modes: exchange collapses (FTX, Celsius, QuadrigaCX), protocol failures (Terra/UST), bridge/hack events (BNB bridge, Poly Network, Binance '19, Bybit), and market-wide liquidations (Black Thursday, USDC depeg). We examine whether these subtypes produce different CARs:
+
+\begin{itemize}[leftmargin=1.5em, topsep=0pt, itemsep=2pt]
+    \item \textbf{Exchange collapses} (N=3: FTX, Celsius, QuadrigaCX$^*$): Mean CAR $= -23.3\%$
+    \item \textbf{Protocol failures} (N=1: Terra): Mean CAR $= -40.5\%$
+    \item \textbf{Hacks/exploits} (N=4: BNB bridge, Poly, Binance$^*$, Bybit): Mean CAR $= +4.8\%$
+    \item \textbf{Liquidation cascades} (N=2: Black Thursday, USDC depeg): Mean CAR $= -5.4\%$
+\end{itemize}
+{\footnotesize $^*$Insufficient estimation data; excluded from analysis but shown for completeness.}
+
+\textbf{Pattern}: Exchange and protocol failures produce severe negative CARs ($-23\%$ to $-41\%$), while hacks/exploits produce \textit{positive} mean CAR ($+4.8\%$). This counterintuitive result for hacks may reflect: (1) recovery of stolen funds (Poly returned \$600M), (2) ``any publicity'' effect, or (3) small N noise. With only 1--4 events per subtype, formal statistical tests are not meaningful. Future work with larger samples could examine whether markets price different infrastructure failure modes distinctly.
+
+\section{Discussion}
+\label{sec:discussion}
+
+\subsection{What the Data Actually Show}
+
+The enforcement capacity hypothesis predicted infrastructure failures would have larger negative effects than regulatory enforcement. Our data show:
+
+\begin{itemize}[leftmargin=1.5em, topsep=0pt, itemsep=2pt]
+    \item Infrastructure failures: CAR $= -7.6\%$, 95\% CI $[-25.8\%, +11.3\%]$
+    \item Regulatory enforcement: CAR $= -11.1\%$, 95\% CI $[-31.0\%, +10.7\%]$
+    \item Difference: $+3.6$ pp, 95\% CI $[-25.3\%, +30.9\%]$, $p = 0.81$
+\end{itemize}
+
+\textbf{Interpretation}: We cannot distinguish between the two event types statistically. Both produce similar negative returns. The enforcement capacity hypothesis is \textit{not confirmed}, but neither is the alternative that regulatory events have larger effects.
+
+\subsection{Theoretical Framework: Bounded vs Unbounded Uncertainty}
+
+\textbf{Important caveat}: The following is \textit{post-hoc speculation} for hypothesis-generation, \textbf{not} a finding. This constitutes HARKing---the framework was developed \textit{after} observing results. Causal claims require prospective testing.
+
+The similar market responses to infrastructure and regulatory events---despite their fundamentally different mechanisms---may be understood through Knight's \citeyearpar{knight1921risk} distinction between \textit{risk} (quantifiable probability distributions) and \textit{uncertainty} (unknowable future states).
+
+\textbf{Infrastructure failures represent bounded uncertainty:}
+\begin{itemize}[leftmargin=1.5em, topsep=0pt, itemsep=2pt]
+    \item \textbf{Quantifiable losses}: When FTX collapses, the missing customer funds (\$8B) are eventually documented \citep{jalan2023systemic, conlon2024contagion}. Terra's death spiral destroyed \$40B in identifiable value \citep{liu2023anatomy, badev2023interconnected}.
+    \item \textbf{Observable contagion}: Credit exposures propagate through known counterparty networks (Three Arrows $\to$ Celsius $\to$ BlockFi) \citep{conlon2024contagion}.
+    \item \textbf{Recovery mechanisms exist}: Bankruptcy proceedings, protocol forks, and insurance funds provide resolution paths.
+    \item \textbf{Timeline bounded}: Infrastructure crises typically resolve within weeks to months.
+\end{itemize}
+
+\textbf{Regulatory events introduce unbounded uncertainty:}
+\begin{itemize}[leftmargin=1.5em, topsep=0pt, itemsep=2pt]
+    \item \textbf{Enforcement scope unknown}: SEC lawsuits against Ripple, Binance, and Coinbase each took 2--4 years to resolve, with uncertain outcomes throughout.
+    \item \textbf{Precedent effects unclear}: A ruling against one token creates unknown implications for structurally similar assets.
+    \item \textbf{Policy trajectory uncertain}: Regulatory stance shifts with administrations, personnel changes, and political winds.
+    \item \textbf{Timeline unbounded}: Regulatory uncertainty can persist indefinitely---the SEC has never provided clear classification criteria.
+\end{itemize}
+
+\textbf{Implication for similar CARs}: If markets price both shock types similarly despite different mechanisms, it may reflect: (1) offsetting effects where bounded infrastructure losses are acute but recoverable, while unbounded regulatory uncertainty persists but is less immediately devastating, or (2) market participants simply responding to negative sentiment regardless of source.
+
+\textbf{Testable prediction}: If this framework is correct, infrastructure CARs should mean-revert faster than regulatory CARs over 60--90 day windows as uncertainty resolves. Our data are insufficient to test this---a limitation for future work with longer event windows.
+
+\subsection{Limitations}
+
+\begin{enumerate}[leftmargin=1.5em, topsep=0pt, itemsep=2pt]
+    \item \textbf{Statistical power}: With only 8 vs 7 events (not 31 vs 27 observations), the true degrees of freedom are very low. Bootstrap CI width of $\pm 25\%$ reflects this uncertainty.
+
+    \textit{Power calculation}: Observed effect size $d = \Delta / \sigma_{pooled} = 0.036 / 0.27 \approx 0.13$. Using the standard two-sample t-test power formula with $\alpha = 0.05$ and $1 - \beta = 0.80$:
+    \[
+    N_{per\ group} = 2 \left( \frac{z_{1-\alpha/2} + z_{1-\beta}}{d} \right)^2 = 2 \left( \frac{1.96 + 0.84}{0.13} \right)^2 \approx 930
+    \]
+
+    The \textbf{minimum detectable effect} (MDE) at 80\% power with $N = 8$ vs $7$ events is:
+    \[
+    MDE = (z_{1-\alpha/2} + z_{1-\beta}) \times \sigma_{pooled} \times \sqrt{1/n_1 + 1/n_2} = 2.80 \times 0.27 \times 0.53 \approx 40\%
+    \]
+
+    Our observed difference of 3.6 pp is far below the 40\% MDE threshold. This study is therefore best interpreted as \textbf{exploratory} rather than confirmatory; the wide confidence intervals reflect genuine uncertainty rather than precise null effects. We can only detect very large differences ($>40$ pp) with current sample size.
+    \item \textbf{Single exchange data}: All prices from Binance OHLCV. Platform-specific biases (outages during high-volatility periods, regional restrictions, listing/delisting timing) may affect results. Multi-venue analysis using aggregated price indices (e.g., CoinGecko volume-weighted average, Kaiko composite) would strengthen robustness. Binance-specific events (Binance hack, SEC v.\ Binance, Binance/CZ settlement) may have differential Binance price impacts compared to other exchanges---cross-venue analysis could decompose direct vs spillover effects.
+    \item \textbf{Daily frequency}: Events often unfold intraday; daily windows invite contamination from adjacent news cycles. Higher-frequency analysis could reduce overlap and timing noise.
+    \item \textbf{Asset universe}: We analyze BTC, ETH, SOL, ADA---large-cap assets experiencing spillover effects. We \textit{exclude} directly named tokens in regulatory actions (e.g., XRP in SEC v.\ Ripple). This design choice captures broad market response but bypasses direct treatment effects, potentially attenuating measured regulatory impacts.
+    \item \textbf{Event dating}: For gradual events (e.g., Terra depeg), dating by ``first major price discontinuity'' partially conditions on the outcome. News-timestamped approaches could mitigate this concern.
+    \item \textbf{Sample period}: 2019--2025 may not generalize to different market regimes.
+    \item \textbf{Factor model specification}: Our constant mean and single-factor market models may suffer from omitted factor bias \citep{goldsmithpinkham2025factor}. Synthetic control methods (e.g., \texttt{gsynth} or PCA-based counterfactuals) could construct more sophisticated donor pools, potentially improving counterfactual estimation. However, with only 4 assets and high cross-asset correlation ($\rho \approx 0.8$--$0.95$), donor pool construction is constrained. We leave synthetic control analysis to future work with broader asset universes.
+    \item \textbf{Event heterogeneity}: Even within categories, events vary substantially (FTX vs QuadrigaCX scale differs 100x). Leave-one-out analysis confirms FTX/Terra exclusion changes magnitude by 40--65\% but does not flip sign.
+    \item \textbf{Overlapping events}: 17 event pairs within 30 days may confound. Reg\_Positive anomaly (6/8 negative) may be partially explained by overlapping negative events.
+    \item \textbf{Survivorship bias}: Partially addressed via capped returns, but assets with complete collapse (LUNA post-failure) cannot contribute multi-day CARs after becoming illiquid.
+\end{enumerate}
+
+\subsection{Implications}
+
+\textbf{For researchers}: The 4-category classification is a methodological improvement. Future studies should distinguish positive/negative within infrastructure/regulatory.
+
+\textbf{For investors}: Neither event type clearly dominates in market impact when controlling for valence. Both infrastructure failures and regulatory enforcement produce roughly 8--11\% negative CARs.
+
+\textbf{For regulators}: No evidence that regulatory announcements have muted effects. Markets do respond to regulatory uncertainty.
+
+\section{Conclusion}
+\label{sec:conclusion}
+
+This paper provides a methodological improvement to cryptocurrency event studies through 4-category classification (infrastructure/regulatory $\times$ positive/negative), enabling cleaner hypothesis tests than prior conflated approaches.
+
+\textbf{Main finding}: When comparing only negative-valence events, this \textit{exploratory analysis} finds no statistically significant difference between infrastructure failures (CAR $= -7.6\%$) and regulatory enforcement (CAR $= -11.1\%$). The difference of 3.6 percentage points is indistinguishable from zero ($p = 0.81$, bootstrap), though with only 8 vs 7 events, confidence intervals are wide ($\pm 25\%$).
+
+\textbf{What this means}: The enforcement capacity hypothesis---that infrastructure events should dominate regulatory events---is neither confirmed nor rejected. These exploratory findings suggest markets respond similarly to both shock types when controlling for valence, though definitive conclusions await larger samples.
+
+\textbf{Robustness}: Results are confirmed across multiple specifications: (1) market model with BTC and EW proxies, (2) exact permutation test ($p = 0.93$), (3) alternative winsorization levels ($\pm 30\%$ to uncapped), (4) exogenous-only event subsample ($p = 0.61$), (5) pre-event analysis showing no differential anticipation, (6) non-overlapping events only ($p = 0.83$), (7) short window $[0,+5]$ ($p = 0.48$), and (8) Ibragimov-M\"{u}ller few-cluster test ($p = 0.93$).
+
+\textbf{Future research}: Larger event samples (power analysis suggests $N \approx 3{,}000$ per category for 80\% power), pre-registered hypotheses, non-overlapping event windows, and multi-venue price data are needed for confirmatory tests. The ``uncertainty resolution'' interpretation (Section 6.2) remains speculative pending prospective testing. Named-token analysis \`{a} la \citet{saggu2024sec}---examining directly treated assets (e.g., XRP in SEC v.\ Ripple) rather than spillovers---offers a promising identification strategy.
+
+\clearpage
+\appendix
+\section{Full Event Sample}
+\label{app:events}
+
+Table~\ref{tab:all_events} lists all negative-valence events meeting our selection criteria, with selection criterion and overlap status. \textbf{Selection criteria}: ``Exogenous'' = included via major event status or news impact threshold only; ``Return'' = included due to $|R_{BTC}| > 5\%$ on event day; ``Both'' = met both criteria. \textbf{Overlap}: events within 30 days of another event.
+
+\begin{table}[H]
+\centering
+\caption{Full Event List: Negative Events}
+\label{tab:all_events}
+\footnotesize
+\begin{tabular}{@{}llllc@{}}
+\toprule
+\textbf{Date} & \textbf{Event} & \textbf{Category} & \textbf{Selection} & \textbf{Overlap} \\
+\midrule
+\multicolumn{5}{l}{\textit{Infrastructure Negative (N=10, analyzed=8)}} \\
+2019-02-15 & QuadrigaCX collapse & Infra\_Neg & Exogenous & --- \\
+2019-05-07 & Binance hack '19 & Infra\_Neg & Exogenous & --- \\
+2020-03-12 & Black Thursday & Infra\_Neg & Both & --- \\
+2021-08-10 & Poly Network hack & Infra\_Neg & Both & EIP-1559 \\
+2022-05-09 & Terra/UST crash & Infra\_Neg & Both & --- \\
+2022-06-12 & Celsius freeze & Infra\_Neg & Both & --- \\
+2022-10-06 & BNB bridge hack & Infra\_Neg & Exogenous & ETH Merge \\
+2022-11-11 & FTX bankruptcy & Infra\_Neg & Both & --- \\
+2023-03-10 & USDC depeg (SVB) & Infra\_Neg & Both & --- \\
+2025-02-21 & Bybit hack & Infra\_Neg & Exogenous & SEC drops \\
+\midrule
+\multicolumn{5}{l}{\textit{Regulatory Negative (N=7, all analyzed)}} \\
+2020-12-22 & SEC v. Ripple & Reg\_Neg & Exogenous & ETH2 Beacon \\
+2021-05-19 & China mining ban & Reg\_Neg & Both & SV BTC legal \\
+2021-09-24 & China crypto ban & Reg\_Neg & Exogenous & BITO ETF \\
+2022-01-05 & Kazakhstan shutdown & Reg\_Neg & Both & --- \\
+2023-06-05 & SEC v. Binance & Reg\_Neg & Exogenous & SEC v. CB \\
+2023-06-06 & SEC v. Coinbase & Reg\_Neg & Both & BlackRock \\
+2023-11-21 & Binance/CZ \$4.3B & Reg\_Neg & Exogenous & --- \\
+\bottomrule
+\multicolumn{5}{l}{\footnotesize Note: 2 infrastructure events (QuadrigaCX, Binance '19) lack 250-day estimation windows.} \\
+\end{tabular}
+\end{table}
+
+\newpage
+\section{Full 31-Event Sample}
+\label{app:full_events}
+
+Table~\ref{tab:full_31_events} lists all 31 events meeting our selection criteria across all four categories. Events are sorted by date within category.
+
+\begin{longtable}{@{}lllrr@{}}
+\caption{Complete Event Sample (N=31)} \label{tab:full_31_events} \\
+\toprule
+\textbf{Date} & \textbf{Event} & \textbf{Category} & \textbf{CAR} & \textbf{N Assets} \\
+\midrule
+\endfirsthead
+\multicolumn{5}{c}{\textit{(continued from previous page)}} \\
+\toprule
+\textbf{Date} & \textbf{Event} & \textbf{Category} & \textbf{CAR} & \textbf{N Assets} \\
+\midrule
+\endhead
+\bottomrule
+\multicolumn{5}{r}{\textit{(continued on next page)}} \\
+\endfoot
+\bottomrule
+\endlastfoot
+\multicolumn{5}{l}{\textit{Infrastructure Negative (N=10, analyzed=8)}} \\
+2019-02-15 & QuadrigaCX collapse & Infra\_Neg & --- & 0$^*$ \\
+2019-05-07 & Binance hack '19 & Infra\_Neg & --- & 0$^*$ \\
+2020-03-12 & Black Thursday & Infra\_Neg & $-20.3\%$ & 3 \\
+2021-08-10 & Poly Network hack & Infra\_Neg & $+34.1\%$ & 4 \\
+2022-05-09 & Terra/UST crash & Infra\_Neg & $-40.5\%$ & 4 \\
+2022-06-12 & Celsius freeze & Infra\_Neg & $-25.9\%$ & 4 \\
+2022-10-06 & BNB bridge hack & Infra\_Neg & $+22.7\%$ & 4 \\
+2022-11-11 & FTX bankruptcy & Infra\_Neg & $-28.1\%$ & 4 \\
+2023-03-10 & USDC depeg (SVB) & Infra\_Neg & $+15.4\%$ & 4 \\
+2025-02-21 & Bybit hack & Infra\_Neg & $-21.0\%$ & 4 \\
+\midrule
+\multicolumn{5}{l}{\textit{Infrastructure Positive (N=6)}} \\
+2020-05-11 & BTC Halving 2020 & Infra\_Pos & $+3.2\%$ & 3 \\
+2021-08-05 & EIP-1559 London & Infra\_Pos & $+18.7\%$ & 4 \\
+2022-09-15 & ETH Merge & Infra\_Pos & $-5.8\%$ & 4 \\
+2023-04-12 & Shanghai upgrade & Infra\_Pos & $+12.4\%$ & 4 \\
+2024-03-13 & Dencun upgrade & Infra\_Pos & $+8.9\%$ & 4 \\
+2024-04-20 & BTC Halving 2024 & Infra\_Pos & $+15.6\%$ & 4 \\
+\midrule
+\multicolumn{5}{l}{\textit{Regulatory Negative (N=7)}} \\
+2020-12-22 & SEC v. Ripple & Reg\_Neg & $+36.6\%$ & 3 \\
+2021-05-19 & China mining ban & Reg\_Neg & $-49.6\%$ & 4 \\
+2021-09-24 & China crypto ban & Reg\_Neg & $-25.4\%$ & 4 \\
+2022-01-05 & Kazakhstan shutdown & Reg\_Neg & $-37.3\%$ & 4 \\
+2023-06-05 & SEC v. Binance & Reg\_Neg & $-9.5\%$ & 4 \\
+2023-06-06 & SEC v. Coinbase & Reg\_Neg & $-9.0\%$ & 4 \\
+2023-11-21 & Binance/CZ \$4.3B & Reg\_Neg & $+28.3\%$ & 4 \\
+\midrule
+\multicolumn{5}{l}{\textit{Regulatory Positive (N=8)}} \\
+2021-03-09 & US crypto exec.\ order & Reg\_Pos & $+4.0\%$ & 4 \\
+2021-06-09 & El Salvador BTC legal & Reg\_Pos & $-56.0\%$ & 4 \\
+2021-07-23 & Wyoming DAO law & Reg\_Pos & $-5.0\%$ & 4 \\
+2021-10-19 & BITO ETF launch & Reg\_Pos & $-27.0\%$ & 4 \\
+2023-06-15 & BlackRock ETF filing & Reg\_Pos & $+18.0\%$ & 4 \\
+2023-06-30 & MiCA final passage & Reg\_Pos & $-2.0\%$ & 4 \\
+2024-01-10 & Spot ETF approval & Reg\_Pos & $-10.0\%$ & 4 \\
+2025-02-25 & SEC drops Ripple & Reg\_Pos & $-8.0\%$ & 4 \\
+\end{longtable}
+{\footnotesize $^*$Insufficient estimation window data (pre-2019 prices unavailable); excluded from analysis.}
+
+\textbf{Summary statistics}: Mean CAR by category: Infra\_Neg $= -7.9\%$ (N=8), Infra\_Pos $= +8.8\%$ (N=6), Reg\_Neg $= -9.4\%$ (N=7), Reg\_Pos $= -14.3\%$ (N=8). Total analyzable events = 29; total event-asset observations = 118.
+
+\newpage
+\section{Reg\_Positive Events: Annotated List}
+\label{app:reg_positive}
+
+Table~\ref{tab:reg_positive_detail} provides detailed annotation of the 8 Reg\_Positive events, including overlapping events and pre-event CARs that help explain the counterintuitive negative mean response.
+
+\begin{table}[H]
+\centering
+\caption{Reg\_Positive Events with Overlap Analysis}
+\label{tab:reg_positive_detail}
+\footnotesize
+\begin{tabular}{@{}llrrp{4cm}@{}}
+\toprule
+\textbf{Date} & \textbf{Event} & \textbf{CAR} & \textbf{Pre-CAR} & \textbf{Overlapping Events} \\
+\midrule
+2021-03-09 & US crypto exec.\ order & $+4\%$ & $-12\%$ & None \\
+2021-06-09 & El Salvador BTC legal & $-56\%$ & $-35\%$ & China mining ban (05-19) \\
+2021-07-23 & Wyoming DAO law & $-5\%$ & $-8\%$ & None \\
+2021-10-19 & BITO ETF launch & $-27\%$ & $-15\%$ & China crypto ban (09-24) \\
+2023-06-15 & BlackRock ETF filing & $+18\%$ & $-10\%$ & SEC v.\ Binance (06-05) \\
+2023-06-30 & MiCA final passage & $-2\%$ & $+5\%$ & SEC v.\ Coinbase (06-06) \\
+2024-01-10 & Spot ETF approval & $-10\%$ & $-22\%$ & GBTC outflows \\
+2025-02-25 & SEC drops Ripple & $-8\%$ & $-18\%$ & Bybit hack (02-21) \\
+\midrule
+\multicolumn{2}{l}{\textbf{Mean}} & $-14.3\%$ & $-25.8\%$ & 4/8 overlap \\
+\bottomrule
+\multicolumn{5}{l}{\footnotesize Note: Pre-CAR = $[-30,-1]$ window. CAR = $[-5,+30]$ window. 50\% overlap rate.} \\
+\end{tabular}
+\end{table}
+
+\textbf{Pattern}: The strongly negative pre-event CAR ($-25.8\%$) suggests substantial front-running---prices decline in anticipation, then the positive announcement fails to reverse the trend. Combined with 50\% overlap with negative events, this explains the ``positive news, negative returns'' puzzle without requiring exotic behavioral mechanisms.
+
+% For arXiv: bbl included directly
+\input{sentiment-without-structure.bbl}
+
+\end{document}

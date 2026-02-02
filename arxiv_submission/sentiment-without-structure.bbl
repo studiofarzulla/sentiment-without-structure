@@ -1,0 +1,204 @@
+\begin{thebibliography}{28}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Auer and Claessens(2018)]{auer2018regulating}
+Raphael Auer and Stijn Claessens.
+\newblock Regulating cryptocurrencies: Assessing market reactions.
+\newblock \emph{BIS Quarterly Review}, pages 51--65, September 2018.
+
+\bibitem[Auer and Claessens(2022)]{auer2022banking}
+Raphael Auer and Stijn Claessens.
+\newblock Banking on bitcoin: Bis and central bank announcements and
+  cryptocurrency prices.
+\newblock \emph{Journal of International Money and Finance}, 127:\penalty0
+  102681, 2022.
+
+\bibitem[Badev and Watsky(2023)]{badev2023interconnected}
+Anton Badev and Cy~Watsky.
+\newblock Interconnected defi: Ripple effects from the terra collapse.
+\newblock FEDS Working Paper 2023-044, Federal Reserve Board, 2023.
+
+\bibitem[Boehmer et~al.(1991)Boehmer, Musumeci, and Poulsen]{boehmer1991event}
+Ekkehart Boehmer, Jim Musumeci, and Annette~B. Poulsen.
+\newblock Event-study methodology under conditions of event-induced variance.
+\newblock \emph{Journal of Financial Economics}, 30\penalty0 (2):\penalty0
+  253--272, 1991.
+\newblock \doi{10.1016/0304-405X(91)90032-F}.
+
+\bibitem[Borri and Shakhnov(2020)]{borri2020regulation}
+Nicola Borri and Kirill Shakhnov.
+\newblock Regulation spillovers across cryptocurrency markets.
+\newblock \emph{Finance Research Letters}, 36, 2020.
+\newblock \doi{10.1016/j.frl.2019.101333}.
+
+\bibitem[Cameron et~al.(2008)Cameron, Gelbach, and
+  Miller]{cameron2008bootstrap}
+A~Colin Cameron, Jonah~B Gelbach, and Douglas~L Miller.
+\newblock Bootstrap-based improvements for inference with clustered errors.
+\newblock \emph{Review of Economics and Statistics}, 90\penalty0 (3):\penalty0
+  414--427, 2008.
+\newblock \doi{10.1162/rest.90.3.414}.
+
+\bibitem[Casini and McCloskey(2025)]{casini2025shock}
+Alessandro Casini and Adam McCloskey.
+\newblock Identification, estimation and inference in high-frequency event
+  study regressions.
+\newblock \emph{CEIS Research Paper No. 608, Tor Vergata University}, 2025.
+
+\bibitem[Chokor and Alfieri(2021)]{chokor2021long}
+Ahmad Chokor and {\'E}lise Alfieri.
+\newblock Long and short-term impacts of regulation in the cryptocurrency
+  market.
+\newblock \emph{Quarterly Review of Economics and Finance}, 81:\penalty0
+  157--173, 2021.
+\newblock \doi{10.1016/j.qref.2021.05.005}.
+
+\bibitem[Conlon et~al.(2024)Conlon, Corbet, and Hou]{conlon2024contagion}
+Thomas Conlon, Shaen Corbet, and Yang Hou.
+\newblock Contagion effects of permissionless, worthless cryptocurrency tokens:
+  Evidence from the collapse of ftx.
+\newblock \emph{Journal of International Financial Markets, Institutions and
+  Money}, 91, 2024.
+\newblock SSRN: 4445162.
+
+\bibitem[Cumming et~al.(2025)Cumming, Fuchs, and Momtaz]{cumming2025market}
+Douglas~J. Cumming, Johannes Fuchs, and Paul~P. Momtaz.
+\newblock Market reactions to cryptocurrency regulation: Risk, return and the
+  role of enforcement quality.
+\newblock \emph{British Journal of Management}, 2025.
+\newblock \doi{10.1111/1467-8551.70002}.
+
+\bibitem[Esparcia et~al.(2024)Esparcia, Escribano, and
+  Jare{\~n}o]{esparcia2024ftx}
+Carlos Esparcia, Ana Escribano, and Francisco Jare{\~n}o.
+\newblock Assessing the crypto market stability after the ftx collapse: A study
+  of high frequency volatility and connectedness.
+\newblock \emph{International Review of Financial Analysis}, 94, 2024.
+\newblock \doi{10.1016/j.irfa.2024.103287}.
+
+\bibitem[Farzulla(2025)]{farzulla2025infrastructure}
+Murad Farzulla.
+\newblock Infrastructure vs regulatory shocks: Asymmetric volatility response
+  in cryptocurrency markets.
+\newblock \emph{Research Square Preprint}, 2025.
+\newblock \doi{10.21203/rs.3.rs-8323026/v1}.
+\newblock Under review at Digital Finance.
+
+\bibitem[Goldsmith-Pinkham and Lyu(2025)]{goldsmithpinkham2025factor}
+Paul Goldsmith-Pinkham and Tianhao Lyu.
+\newblock Causal inference in financial event studies.
+\newblock \emph{Working Paper, Yale University}, 2025.
+
+\bibitem[Ibragimov and M{\"u}ller(2010)]{ibragimov2010tstatistic}
+Rustam Ibragimov and Ulrich~K M{\"u}ller.
+\newblock t-statistic based correlation and heterogeneity robust inference.
+\newblock \emph{Journal of Business \& Economic Statistics}, 28\penalty0
+  (4):\penalty0 453--468, 2010.
+\newblock \doi{10.1198/jbes.2009.08046}.
+
+\bibitem[Jalan and Matkovskyy(2023)]{jalan2023systemic}
+Akanksha Jalan and Roman Matkovskyy.
+\newblock Systemic risks in the cryptocurrency market: Evidence from the ftx
+  collapse.
+\newblock \emph{Finance Research Letters}, 54, 2023.
+\newblock \doi{10.1016/j.frl.2023.103670}.
+
+\bibitem[Knight(1921)]{knight1921risk}
+Frank~H Knight.
+\newblock \emph{Risk, Uncertainty and Profit}.
+\newblock Houghton Mifflin, Boston, 1921.
+
+\bibitem[Koenraadt and Leung(2024)]{koenraadt2024investor}
+Jeroen Koenraadt and Ester Leung.
+\newblock Investor reactions to crypto token regulation.
+\newblock \emph{European Accounting Review}, 33\penalty0 (2):\penalty0
+  367--397, 2024.
+\newblock \doi{10.1080/09638180.2022.2090399}.
+
+\bibitem[Kolari and Pynnonen(2010)]{kolari2010event}
+James~W Kolari and Seppo Pynnonen.
+\newblock Event study testing with cross-sectional correlation of abnormal
+  returns.
+\newblock \emph{Review of Financial Studies}, 23\penalty0 (11):\penalty0
+  3996--4025, 2010.
+\newblock \doi{10.1093/rfs/hhq072}.
+
+\bibitem[Kothari and Warner(2007)]{kothari2007econometrics}
+S.P. Kothari and Jerold~B. Warner.
+\newblock Econometrics of event studies.
+\newblock In \emph{Handbook of Empirical Corporate Finance}, pages 3--36.
+  Elsevier, 2007.
+\newblock \doi{10.1016/B978-0-444-53265-7.50015-9}.
+
+\bibitem[Liu et~al.(2023)Liu, Makarov, and Schoar]{liu2023anatomy}
+Jiageng Liu, Igor Makarov, and Antoinette Schoar.
+\newblock Anatomy of a run: The terra luna crash.
+\newblock NBER Working Paper 31160, National Bureau of Economic Research, 2023.
+
+\bibitem[Lucey et~al.(2022)Lucey, Vigne, Yarovaya, and
+  Wang]{lucey2022cryptocurrency}
+Brian~M Lucey, Samuel~A Vigne, Larisa Yarovaya, and Yizhi Wang.
+\newblock The cryptocurrency uncertainty index.
+\newblock \emph{Finance Research Letters}, 45:\penalty0 102147, 2022.
+\newblock \doi{10.1016/j.frl.2021.102147}.
+
+\bibitem[Ly{\'o}csa et~al.(2020)Ly{\'o}csa, Moln{\'a}r, Pl{\'i}hal, and
+  {\v{S}}ira{\v{n}}ov{\'a}]{lyocsa2020impact}
+{\v{S}}tefan Ly{\'o}csa, Peter Moln{\'a}r, Tom{\'a}{\v{s}} Pl{\'i}hal, and
+  M{\'a}ria {\v{S}}ira{\v{n}}ov{\'a}.
+\newblock Impact of macroeconomic news, regulation and hacking exchange markets
+  on the volatility of bitcoin.
+\newblock \emph{Journal of Economic Dynamics and Control}, 119, 2020.
+\newblock \doi{10.1016/j.jedc.2020.103980}.
+
+\bibitem[MacKinlay(1997)]{mackinlay1997event}
+A~Craig MacKinlay.
+\newblock Event studies in economics and finance.
+\newblock \emph{Journal of Economic Literature}, 35\penalty0 (1):\penalty0
+  13--39, 1997.
+\newblock \doi{10.2307/2729691}.
+
+\bibitem[MacKinnon et~al.(2023)MacKinnon, Nielsen, and
+  Webb]{mackinnon2023cluster}
+James~G MacKinnon, Morten~{\O}rregaard Nielsen, and Matthew~D Webb.
+\newblock Cluster-robust inference: A guide to empirical practice.
+\newblock \emph{Journal of Econometrics}, 232\penalty0 (2):\penalty0 272--299,
+  2023.
+\newblock \doi{10.1016/j.jeconom.2022.04.001}.
+
+\bibitem[Makarov and Schoar(2020)]{makarov2020trading}
+Igor Makarov and Antoinette Schoar.
+\newblock Trading and arbitrage in cryptocurrency markets.
+\newblock \emph{Journal of Financial Economics}, 135\penalty0 (2):\penalty0
+  293--319, 2020.
+\newblock \doi{10.1016/j.jfineco.2019.07.001}.
+
+\bibitem[Petersen(2009)]{petersen2009estimating}
+Mitchell~A. Petersen.
+\newblock Estimating standard errors in finance panel data sets: Comparing
+  approaches.
+\newblock \emph{The Review of Financial Studies}, 22\penalty0 (1):\penalty0
+  435--480, 2009.
+\newblock \doi{10.1093/rfs/hhn053}.
+
+\bibitem[Saggu et~al.(2025)Saggu, Ante, and Kopiec]{saggu2024sec}
+Aman Saggu, Lennart Ante, and Kaja Kopiec.
+\newblock Uncertain regulations, definite impacts: The impact of the {US}
+  securities and exchange commission's regulatory interventions on crypto
+  assets.
+\newblock \emph{Finance Research Letters}, 71, 2025.
+\newblock \doi{10.1016/j.frl.2024.106559}.
+
+\bibitem[Shanaev et~al.(2020)Shanaev, Sharma, Ghimire, and
+  Shuraeva]{shanaev2020taming}
+Savva Shanaev, Satish Sharma, Binam Ghimire, and Arina Shuraeva.
+\newblock Taming the blockchain beast? regulatory implications for the
+  cryptocurrency market.
+\newblock \emph{Research in International Business and Finance}, 51, 2020.
+\newblock \doi{10.1016/j.ribaf.2019.101080}.
+
+\end{thebibliography}
