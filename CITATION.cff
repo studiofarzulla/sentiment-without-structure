@@ -1,0 +1,33 @@
+cff-version: 1.2.0
+message: "If you use or reference this work, please cite it as below."
+type: article
+authors:
+  - family-names: "Farzulla"
+    given-names: "Murad"
+    orcid: "https://orcid.org/0009-0002-7164-8704"
+    email: "murad@dissensus.ai"
+    affiliation: "Dissensus AI"
+title: "Sentiment Without Structure: When Order Flow Carries More Information Than Textual Sentiment"
+version: "1.0.0"
+date-released: "2025-12-01"
+license: "CC-BY-4.0"
+doi: "10.5281/zenodo.18099609"
+url: "https://dissensus.ai"
+keywords:
+  - sentiment analysis
+  - order flow
+  - market microstructure
+  - cryptocurrency
+  - information asymmetry
+  - text mining
+preferred-citation:
+  type: article
+  authors:
+    - family-names: "Farzulla"
+      given-names: "Murad"
+      orcid: "https://orcid.org/0009-0002-7164-8704"
+  title: "Sentiment Without Structure: When Order Flow Carries More Information Than Textual Sentiment"
+  year: 2025
+  doi: "10.5281/zenodo.18099609"
+  publisher:
+    name: "Zenodo"
