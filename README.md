@@ -1,20 +1,17 @@
-# Sentiment Without Structure
+# Same Returns, Different Risks
 
-**Differential Liquidity Response to Infrastructure vs Regulatory Events in Cryptocurrency Markets**
+**How Cryptocurrency Markets Process Infrastructure vs Regulatory Shocks**
 
+[![arXiv](https://img.shields.io/badge/arXiv-2602.07046-b31b1b.svg)](https://arxiv.org/abs/2602.07046)
 [![DOI](https://img.shields.io/badge/DOI-10.5281%2Fzenodo.18099609-blue.svg)](https://doi.org/10.5281/zenodo.18099609)
 [![License: CC BY 4.0](https://img.shields.io/badge/License-CC_BY_4.0-lightgrey.svg)](https://creativecommons.org/licenses/by/4.0/)
-[![Status](https://img.shields.io/badge/Status-With_Editor-yellow.svg)](https://doi.org/10.5281/zenodo.18099609)
+[![Status](https://img.shields.io/badge/Status-Transferring_to_Comp._Econ.-orange.svg)]()
 
 **Working Paper DAI-2507** | [Dissensus AI](https://dissensus.ai)
 
 ## Abstract
 
-We investigate differential market responses to infrastructure versus regulatory events in cryptocurrency markets using event study methodology with 4-category event classification. From 50 candidate events (2019--2025), 31 meet inclusion criteria across Bitcoin, Ethereum, Solana, and Cardano. We employ constant mean and market-adjusted models with event-level block bootstrap confidence intervals that properly account for cross-sectional correlation.
-
-Our primary comparison focuses on negative-valence events: infrastructure failures (8 events) versus regulatory enforcement (7 events). Infrastructure failures produce mean Cumulative Abnormal Return (CAR) of -7.6% (95% CI: [-25.8%, +11.3%]) and regulatory enforcement produces mean CAR of -11.1% (CI: [-31.0%, +10.7%]). The difference of +3.6 percentage points has CI [-25.3%, +30.9%], p = 0.81 -- a null finding indicating markets respond similarly to both shock types when controlling for valence.
-
-Robustness checks confirm consistent results across window specifications, leave-one-out exclusion of major events (FTX, Terra), and alternative market model specifications. The 4-category classification addresses prior conflation of upgrades with failures. This exploratory analysis should be treated as hypothesis-generating.
+Cryptocurrency markets face two structurally distinct threat vectors -- infrastructure failures (exchange hacks, protocol exploits, bridge collapses) and regulatory enforcement (SEC actions, exchange shutdowns, trading bans) -- yet whether markets price these risks differently remains an open question. Using a 4-category event classification (infrastructure/regulatory x positive/negative) applied to 31 events across Bitcoin, Ethereum, Solana, and Cardano (2019--2025), we find no statistically significant difference in return-level market response: infrastructure failures produce mean CAR of -7.6% versus -11.1% for regulatory enforcement (difference = +3.6 pp, p = 0.81). However, a companion GJR-GARCH-X analysis of the same event taxonomy reveals that infrastructure events generate 5.7x larger conditional variance impacts than regulatory shocks (p = 0.0008, Cohen's d = 2.753), with crisis-regime amplification reaching 5x for infrastructure sensitivity while regulatory effects remain flat across regimes. Together, these results establish that the market's risk differentiation mechanism operates through the second moment, not the first: returns appear interchangeable, but the variance structure reveals sharply distinct processing of bounded (infrastructure) versus unbounded (regulatory) uncertainty.
 
 ## Key Findings
 
@@ -23,7 +20,9 @@ Robustness checks confirm consistent results across window specifications, leave
 | Infrastructure failures (N=8) mean CAR | -7.6% |
 | Regulatory enforcement (N=7) mean CAR | -11.1% |
 | Difference | +3.6 pp (p = 0.81) |
-| Primary result | Null finding -- markets respond similarly to both shock types |
+| Primary result | Null return-level finding -- markets respond similarly |
+| Companion GARCH result | 5.7x infrastructure variance multiplier (p = 0.0008) |
+| Joint interpretation | Risk differentiation lives in the second moment |
 | Robustness | Consistent across 8 alternative specifications |
 
 ## Repository Structure
@@ -57,20 +56,23 @@ python scripts/run_im_test.py
 python scripts/run_nonoverlap_analysis.py
 ```
 
+## Companion Paper
+
+This paper forms a pair with [Infrastructure vs Regulatory Shocks: Asymmetric Volatility Response in Cryptocurrency Markets](https://doi.org/10.21203/rs.3.rs-8323026/v1) (DAI-2506), which examines the same event taxonomy through GJR-GARCH-X conditional variance modeling.
+
 ## Keywords
 
-Cryptocurrency, Event Study, Regulation, Infrastructure Risk, Block Bootstrap
+Cryptocurrency, Event Study, Block Bootstrap, Volatility Asymmetry, Infrastructure Risk, Multi-Moment Analysis
 
 ## Citation
 
 ```bibtex
-@article{farzulla2026sentiment,
-  title={Sentiment Without Structure: Differential Liquidity Response to Infrastructure vs Regulatory Events in Cryptocurrency Markets},
+@article{farzulla2025samereturnsdifferentrisks,
+  title={Same Returns, Different Risks: How Cryptocurrency Markets Process Infrastructure vs Regulatory Shocks},
   author={Farzulla, Murad},
-  year={2026},
-  doi={10.5281/zenodo.18099609},
-  url={https://doi.org/10.5281/zenodo.18099609},
-  note={With Editor at Digital Finance (Springer)}
+  journal={arXiv preprint arXiv:2602.07046},
+  year={2025},
+  doi={10.48550/arXiv.2602.07046}
 }
 ```
 
